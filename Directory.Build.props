@@ -1,0 +1,13 @@
+<Project>
+    <PropertyGroup>
+        <Company>Limxc</Company>
+        <Authors>Limxc</Authors>
+        <RepositoryUrl>https://github.com/limxc/Limxc.Arch.git</RepositoryUrl>
+        <PackageProjectUrl>https://www.nuget.org/profiles/limxc</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <Product>Limxc.Arch</Product>
+
+        <Version>0.0.1</Version>
+        <!--<OutputPath>$(MSBuildThisFileDirectory)bin\$(Configuration)\</OutputPath>-->
+    </PropertyGroup>
+</Project>

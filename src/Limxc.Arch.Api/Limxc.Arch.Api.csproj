@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FastEndpoints" Version="6.1.0" />
+    <PackageReference Include="FastEndpoints.Swagger" Version="6.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Limxc.Arch.Application\Limxc.Arch.Application.csproj" />
+    <ProjectReference Include="..\Limxc.Arch.Core.Shared\Limxc.Arch.Core.Shared.csproj" />
+    <ProjectReference Include="..\Limxc.Arch.Core\Limxc.Arch.Core.csproj" />
+    <ProjectReference Include="..\Limxc.Arch.Infra\Limxc.Arch.Infra.csproj" />
+  </ItemGroup>
+
+</Project>
