@@ -4,7 +4,9 @@ using System.Text;
 
 namespace Limxc.Arch.Core.Shared
 {
-    public static class ConstNames
+    public class ConstNames
     {
+        public const string ProductName = "xxx";
+        public const string Version = "V1.0";
     }
 }
