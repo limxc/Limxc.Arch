@@ -1,8 +1,8 @@
-using System;
 using Microsoft.Maui;
 using Microsoft.Maui.Hosting;
+using System;
 
-namespace Limxc.Arch.UI
+namespace Limxc.Arch.UI.MAUIBlazor
 {
     internal class Program : MauiApplication
     {

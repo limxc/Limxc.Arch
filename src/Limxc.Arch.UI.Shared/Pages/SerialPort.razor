@@ -1,0 +1,45 @@
+﻿@page "/serialport" 
+@using Limxc.Arch.UI.MAUIBlazor.Services
+@using System.Diagnostics
+@inject DeviceSerialPortService sp
+
+<h3>SerialPort</h3>
+
+<input @bind="Ports" />
+
+<BootstrapInput TValue="string"
+                IsAutoFocus="true"
+                IsSelectAllTextOnFocus="true"
+                ShowLabel="true"
+                Value="@Ports"
+                />
+
+<Button OnClick="@ButtonClick" Color="Color.Primary">主要按钮</Button>
+  
+@code {
+
+    public string? Ports { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+
+        var ports = sp.GetPortNames();
+
+        Ports = string.Join(",", ports);
+
+        Debug.WriteLine(Ports);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        base.OnAfterRender(firstRender);
+
+    }
+
+    void ButtonClick(MouseEventArgs e)
+    {
+        
+    }
+}

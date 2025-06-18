@@ -1,7 +1,7 @@
 ﻿using ObjCRuntime;
 using UIKit;
 
-namespace Limxc.Arch.UI
+namespace Limxc.Arch.UI.MAUIBlazor
 {
     public class Program
     {

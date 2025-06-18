@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace Limxc.Arch.UI
+namespace Limxc.Arch.UI.MAUIBlazor
 {
     [Register("AppDelegate")]
     public class AppDelegate : MauiUIApplicationDelegate
