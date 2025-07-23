@@ -2,7 +2,7 @@
 using Autofac.Extensions.DependencyInjection;
 using Limxc.Arch.Core;
 using Limxc.Arch.Core.Shared.Interfaces;
-using Limxc.Arch.UI.MAUIBlazor.Service;
+using Limxc.Arch.UI.Shared.Services;
 using Limxc.Arch.UI.MAUIBlazor.Services;
 using Microsoft.Extensions.Logging;
 
@@ -20,7 +20,6 @@ namespace Limxc.Arch.UI.MAUIBlazor
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
 
-
             builder.Services.AddSingleton<DeviceSerialPortService>();
             builder.Services.AddSingleton<ITTSService, TTSService>();
 
@@ -32,7 +31,6 @@ namespace Limxc.Arch.UI.MAUIBlazor
                 _builder.RegisterModule<AppModule>();
             });
 
-
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddBootstrapBlazor();
 
@@ -42,7 +40,6 @@ namespace Limxc.Arch.UI.MAUIBlazor
 #endif
 
             return builder.Build();
-
         }
     }
 }

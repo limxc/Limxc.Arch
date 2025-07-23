@@ -1,7 +1,6 @@
-﻿ 
-using Limxc.Tools.SerialPort; 
+﻿using Limxc.Tools.SerialPort;
 
-namespace Limxc.Arch.UI.MAUIBlazor.Services
+namespace Limxc.Arch.UI.Shared.Services
 {
     public class DeviceSerialPortService : SerialPortService
     {

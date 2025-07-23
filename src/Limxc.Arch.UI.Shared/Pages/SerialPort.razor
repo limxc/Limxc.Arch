@@ -1,13 +1,4 @@
-﻿@page "/serialport" 
-@using Limxc.Arch.UI.MAUIBlazor.Services
-@using System.Diagnostics
-@using Limxc.Tools.Extensions
-@using Limxc.Tools.Extensions.Communication
-@using System.Reactive.Disposables
-@using System.Reactive.Linq
-@using Limxc.Tools.SerialPort
-@implements IDisposable
-@inject DeviceSerialPortService sp
+﻿@page "/serialport"   
 
 <h3>SerialPort</h3>
  
@@ -33,63 +24,3 @@
         <Button IsDisabled="@(!SpIsConnected || string.IsNullOrWhiteSpace(Send))" OnClick="@BtnSend" Color="Color.Primary">发送</Button>
     </BodyTemplate>
 </Card>
-
-@code {
-
-    public IEnumerable<SelectedItem>? Ports { get; set; }
-    public IEnumerable<SelectedItem>? BaudRates { get; set; }
-    public string? SelectedPort { get; set; }
-    public int? SelectedBaudRate { get; set; }
-    public bool CanConnect => string.IsNullOrWhiteSpace(SelectedPort);
-    private bool SpIsConnected { get; set; }
-
-    public string? Received { get; set; }
-    public string? Send { get; set; }
-
-    private CompositeDisposable _disposable = new CompositeDisposable();
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        Ports = sp.GetPortNames().Select(p=>new SelectedItem(p,p)).ToArray();
-        BaudRates = new SerialPortSetting().AvailableBaudRates.Select(p => new SelectedItem(p.ToString(), p.ToString())).ToArray();
-
-        sp.ConnectionState.DistinctUntilChanged().Subscribe(p =>
-            {
-                this.SpIsConnected = p;
-                InvokeAsync(() => StateHasChanged());
-            }).DisposeWith(_disposable);
-
-        sp.Received.Subscribe(p =>
-        {
-            Received = $"@{DateTime.Now:HH:mm:ss}: "+p.ByteToHex().HexToAscII();
-            InvokeAsync(() => StateHasChanged());
-        }).DisposeWith(_disposable);
-    }
-
-    protected override void OnAfterRender(bool firstRender)
-    {
-        base.OnAfterRender(firstRender);
-    }
-
-    public void Dispose()
-    {
-        _disposable.Dispose();
-    }
-
-    void BtnConn(MouseEventArgs e)
-    { 
-        sp.Start(new Tools.SerialPort.SerialPortSetting() { PortName = SelectedPort, BaudRate = SelectedBaudRate??9600 });
-    }
-
-    void BtnDisconn(MouseEventArgs e)
-    {
-        sp.Stop();
-    }
-     
-    void BtnSend(MouseEventArgs e)
-    { 
-        sp.Send(Send.AscIIToHex().HexToByte());
-    }
-}

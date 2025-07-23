@@ -1,10 +1,11 @@
 ﻿using Limxc.Arch.Core.Shared.Interfaces;
 
-namespace Limxc.Arch.UI.MAUIBlazor.Service
+namespace Limxc.Arch.UI.MAUIBlazor.Services
 {
     public class TTSService : ITTSService
     {
         private SpeechOptions _speechOptions;
+
         public TTSService()
         {
             //_speechOptions = new SpeechOptions();
@@ -21,7 +22,6 @@ namespace Limxc.Arch.UI.MAUIBlazor.Service
             //            Locale = local
             //        };
             //    });
-
         }
 
         public async Task Speak(string text)
@@ -41,7 +41,6 @@ namespace Limxc.Arch.UI.MAUIBlazor.Service
             }
             catch (Exception e)
             {
-
             }
         }
     }
