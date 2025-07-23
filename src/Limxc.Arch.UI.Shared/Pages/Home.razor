@@ -1,10 +1,15 @@
 ﻿@page "/"
+@using Limxc.Arch.Core.Shared.Interfaces 
+@inject ITTSService tTSService;
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
-
+<button @onclick="Speak">朗读</button>
 
 @code {
-
+    private async Task Speak()
+    { 
+        await tTSService.Speak();
+    }
 }

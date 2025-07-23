@@ -1,45 +1,95 @@
 ﻿@page "/serialport" 
 @using Limxc.Arch.UI.MAUIBlazor.Services
 @using System.Diagnostics
+@using Limxc.Tools.Extensions
+@using Limxc.Tools.Extensions.Communication
+@using System.Reactive.Disposables
+@using System.Reactive.Linq
+@using Limxc.Tools.SerialPort
+@implements IDisposable
 @inject DeviceSerialPortService sp
 
 <h3>SerialPort</h3>
+ 
+<Switch OnColor="Color.Primary" IsDisabled="true" OnText="开启" OffText="关闭" @bind-Value="@SpIsConnected" /> 
 
-<input @bind="Ports" />
-
-<BootstrapInput TValue="string"
-                IsAutoFocus="true"
-                IsSelectAllTextOnFocus="true"
-                ShowLabel="true"
-                Value="@Ports"
-                />
-
-<Button OnClick="@ButtonClick" Color="Color.Primary">主要按钮</Button>
+<Select Color="Color.Primary" Items="Ports" @bind-Value="SelectedPort"></Select>
+<Select Color="Color.Primary" Items="BaudRates" @bind-Value="SelectedBaudRate"></Select>
   
+<Button IsDisabled="@CanConnect" OnClick="@BtnConn" Color="Color.Primary">连接</Button>
+<Button IsDisabled="@(!SpIsConnected)" OnClick="@BtnDisconn" Color="Color.Primary">断开</Button>
+
+<Card>
+    <HeaderTemplate>接收</HeaderTemplate>
+    <BodyTemplate>
+        <Textarea rows="4" readonly @bind-Value="@Received" />
+    </BodyTemplate>
+</Card>
+
+<Card>
+    <HeaderTemplate>发送</HeaderTemplate>
+    <BodyTemplate>
+        <Textarea rows="4" @bind-Value="@Send" />
+        <Button IsDisabled="@(!SpIsConnected || string.IsNullOrWhiteSpace(Send))" OnClick="@BtnSend" Color="Color.Primary">发送</Button>
+    </BodyTemplate>
+</Card>
+
 @code {
 
-    public string? Ports { get; set; }
+    public IEnumerable<SelectedItem>? Ports { get; set; }
+    public IEnumerable<SelectedItem>? BaudRates { get; set; }
+    public string? SelectedPort { get; set; }
+    public int? SelectedBaudRate { get; set; }
+    public bool CanConnect => string.IsNullOrWhiteSpace(SelectedPort);
+    private bool SpIsConnected { get; set; }
+
+    public string? Received { get; set; }
+    public string? Send { get; set; }
+
+    private CompositeDisposable _disposable = new CompositeDisposable();
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
+        Ports = sp.GetPortNames().Select(p=>new SelectedItem(p,p)).ToArray();
+        BaudRates = new SerialPortSetting().AvailableBaudRates.Select(p => new SelectedItem(p.ToString(), p.ToString())).ToArray();
 
-        var ports = sp.GetPortNames();
+        sp.ConnectionState.DistinctUntilChanged().Subscribe(p =>
+            {
+                this.SpIsConnected = p;
+                InvokeAsync(() => StateHasChanged());
+            }).DisposeWith(_disposable);
 
-        Ports = string.Join(",", ports);
-
-        Debug.WriteLine(Ports);
+        sp.Received.Subscribe(p =>
+        {
+            Received = $"@{DateTime.Now:HH:mm:ss}: "+p.ByteToHex().HexToAscII();
+            InvokeAsync(() => StateHasChanged());
+        }).DisposeWith(_disposable);
     }
 
     protected override void OnAfterRender(bool firstRender)
     {
         base.OnAfterRender(firstRender);
-
     }
 
-    void ButtonClick(MouseEventArgs e)
+    public void Dispose()
     {
-        
+        _disposable.Dispose();
+    }
+
+    void BtnConn(MouseEventArgs e)
+    { 
+        sp.Start(new Tools.SerialPort.SerialPortSetting() { PortName = SelectedPort, BaudRate = SelectedBaudRate??9600 });
+    }
+
+    void BtnDisconn(MouseEventArgs e)
+    {
+        sp.Stop();
+    }
+     
+    void BtnSend(MouseEventArgs e)
+    { 
+        sp.Send(Send.AscIIToHex().HexToByte());
     }
 }
